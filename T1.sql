@@ -17,7 +17,7 @@ create table AIR_FLIGHTS_SCHEDULES as select * from arruda.AIR_FLIGHTS_SCHEDULES
 create table AIR_PASSENGERS as select * from arruda.AIR_PASSENGERS;
 create table AIR_PASSENGERS_DETAILS as select * from arruda.AIR_PASSENGERS_DETAILS;
 
--- 1.
+-- 2.1.
 select p.FIRSTNAME || ' ' || p.LASTNAME AS NAME, 
 pd.city, 
 TRUNC(MONTHS_BETWEEN(SYSDATE, pd.birthdate) / 12) AS AGE
@@ -25,11 +25,11 @@ from AIR_PASSENGERS p
 join AIR_PASSENGERS_DETAILS pd
 on p.passenger_id = pd.passenger_id
 where pd.sex = 'w'
-and pd.birthdate <= ADD_MONTHS(SYSDATE, -40 * 12)
+and pd.birthdate < ADD_MONTHS(SYSDATE, -40 * 12)
 and pd.country = 'BRAZIL'
 ;
 
--- 2
+-- 2.2.
 select airlines.airline_name,
 airplanes.airplane_id,
 airplane_type.name,
@@ -44,7 +44,7 @@ where a_from.country = 'BRAZIL'
 and a_to.country = 'BRAZIL'
 ;
 
--- 3 (mudar data)
+-- 2.3. (mudar data)
 select f.flightno,
 airports_from.name,
 airports_to.name,
@@ -57,7 +57,7 @@ join air_bookings bookings on f.flight_id = bookings.flight_id
 join air_passengers passengers on bookings.passenger_id = passengers.passenger_id
 where f.departure between trunc(to_date('2023-03-25', 'YYYY-MM-DD')) and trunc(to_date('2023-03-25', 'YYYY-MM-DD')+1)-(1/(24*60*60));
 
--- 4 (mudar datas)
+-- 2.4. (mudar datas)
 select al.airline_name,
 f.departure,
 ag.city
@@ -81,6 +81,71 @@ or f.departure between trunc(to_date('2023-03-28', 'YYYY-MM-DD')) and trunc(to_d
 or f.departure between trunc(to_date('2023-03-29', 'YYYY-MM-DD')) and trunc(to_date('2023-03-29', 'YYYY-MM-DD')+1)-(1/(24*60*60))
 or f.departure between trunc(to_date('2023-03-30', 'YYYY-MM-DD')) and trunc(to_date('2023-03-30', 'YYYY-MM-DD')+1)-(1/(24*60*60)))
 ;
+
+-- 4.1
+-- PRIMARY KEYS
+alter table air_airlines
+add constraint pk_air_airlines primary key (airline_id);
+
+alter table air_airplane_types
+add constraint pk_air_airplane_types primary key (airplane_type_id);
+
+alter table air_airplanes
+add constraint pk_air_airplanes primary key (airplane_id);
+
+alter table air_flights
+add constraint pk_air_flights primary key (flight_id);
+
+alter table air_flights_schedules
+add constraint pk_air_flights_schedules primary key (flightno);
+
+alter table air_airports
+add constraint pk_air_airports primary key (airport_id);
+
+alter table air_airports_geo
+add constraint pk_air_airports_geo primary key (airport_id);
+
+alter table air_bookings
+add constraint pk_air_bookings primary key (booking_id);
+
+alter table air_passengers
+add constraint pk_air_passengers primary key (passenger_id);
+
+alter table air_passengers_details
+add constraint pk_air_passengers_details primary key (passenger_id);
+
+-- ALTERNATE KEYS
+alter table air_airlines
+add constraint ak_aairlines_id unique (airline_id);
+
+alter table air_airplane_types
+add constraint pk_aairplane_types primary key (airplane_type_id);
+
+alter table air_airplanes
+add constraint pk_air_airplanes primary key (airplane_id);
+
+alter table air_flights
+add constraint pk_air_flights primary key (flight_id);
+
+alter table air_flights_schedules
+add constraint pk_air_flights_schedules primary key (flightno);
+
+alter table air_airports
+add constraint pk_air_airports primary key (airport_id);
+
+alter table air_airports_geo
+add constraint pk_air_airports_geo primary key (airport_id);
+
+alter table air_bookings
+add constraint pk_air_bookings primary key (booking_id);
+
+alter table air_passengers
+add constraint pk_air_passengers primary key (passenger_id);
+
+alter table air_passengers_details
+add constraint pk_air_passengers_details primary key (passenger_id);
+
+
 
 
 
